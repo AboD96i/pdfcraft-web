@@ -4,7 +4,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PdfCraft</title>
-    
+    <script>
+      // al-ghaith.net: open in English. PdfCraft 0.22.0 draws Arabic interface
+      // labels with disconnected letters, and "Auto" follows the phone's language.
+      // Remove this block once an upstream release fixes Arabic UI shaping.
+      (function () {
+        try {
+          for (const k of ["language", "languages"]) {
+            Object.defineProperty(navigator, k, { get: () => (k === "language" ? "en-US" : ["en-US", "en"]), configurable: true });
+          }
+          const s = JSON.parse(localStorage.getItem("pdfcraft") || "null");
+          if (s && s.language === "ar") { s.language = "auto"; localStorage.setItem("pdfcraft", JSON.stringify(s)); }
+        } catch (e) {}
+      })();
+    </script>
+
 <script type="module">
 import init, * as bindings from './pdfcraft-web-c0a95e1af84f3780.js';
 const wasm = await init({ module_or_path: './pdfcraft-web-c0a95e1af84f3780_bg.wasm' });
